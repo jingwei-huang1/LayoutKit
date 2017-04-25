@@ -24,5 +24,4 @@ time xcodebuild clean test \
     OTHER_SWIFT_FLAGS='-Xfrontend -debug-time-function-bodies' \
     | tee build.log \
     | xcpretty &&
-cat build.log | sh debug-time-function-bodies.sh &&
-
+cat build.log | sh debug-time-function-bodies.sh
