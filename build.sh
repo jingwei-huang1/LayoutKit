@@ -6,14 +6,6 @@ DERIVED_DATA=${1:-/tmp/LayoutKit}
 echo "Derived data location: $DERIVED_DATA";
 
 set -o pipefail &&
-echo "Installing iPhone 6 9.3 and iPhone 6 Plus 9.3 simulators..." &&
-xcrun simctl create 'iPhone 6' \
-    com.apple.CoreSimulator.SimDeviceType.iPhone-6 \
-    com.apple.CoreSimulator.SimRuntime.iOS-9-3 &&
-xcrun simctl create 'iPhone 6 Plus' \
-    com.apple.CoreSimulator.SimDeviceType.iPhone-6-Plus \
-    com.apple.CoreSimulator.SimRuntime.iOS-9-3 &&
-
 echo "Running iOS unit tests..." &&
 rm -rf $DERIVED_DATA &&
 time xcodebuild clean test \
