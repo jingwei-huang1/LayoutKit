@@ -6,14 +6,23 @@ DERIVED_DATA=${1:-/tmp/LayoutKit}
 echo "Derived data location: $DERIVED_DATA";
 
 set -o pipefail &&
+echo "Installing iPhone 6 9.3 and iPhone 6 Plus 9.3 simulators..." &&
+xcrun simctl create 'iPhone 6' \
+    com.apple.CoreSimulator.SimDeviceType.iPhone-6 \
+    com.apple.CoreSimulator.SimRuntime.iOS-9-3 &&
+xcrun simctl create 'iPhone 6 Plus' \
+    com.apple.CoreSimulator.SimDeviceType.iPhone-6-Plus \
+    com.apple.CoreSimulator.SimRuntime.iOS-9-3 &&
 
-echo "Run tests on iOS..." &&
+echo "Running iOS unit tests..." &&
 rm -rf $DERIVED_DATA &&
 time xcodebuild clean test \
     -project LayoutKit.xcodeproj \
     -scheme LayoutKit-iOS \
     -sdk iphonesimulator10.3 \
     -derivedDataPath $DERIVED_DATA \
+    -destination 'platform=iOS Simulator,name=iPhone 6,OS=9.3' \
+    -destination 'platform=iOS Simulator,name=iPhone 6 Plus,OS=9.3' \
     -destination 'platform=iOS Simulator,name=iPhone 7,OS=10.3' \
     -destination 'platform=iOS Simulator,name=iPhone 7 Plus,OS=10.3' \
     OTHER_SWIFT_FLAGS='-Xfrontend -debug-time-function-bodies' \
@@ -21,7 +30,7 @@ time xcodebuild clean test \
     | xcpretty &&
 cat build.log | sh debug-time-function-bodies.sh &&
 
-echo "Run tests on macOS..." &&
+echo "Running macOS unit tests..." &&
 time xcodebuild clean test \
     -project LayoutKit.xcodeproj \
     -scheme LayoutKit-macOS \
@@ -32,7 +41,7 @@ time xcodebuild clean test \
     | xcpretty &&
 cat build.log | sh debug-time-function-bodies.sh &&
 
-echo "Run tests on tvOS..." &&
+echo "Running tvOS unit tests..." &&
 rm -rf $DERIVED_DATA &&
 time xcodebuild clean test \
     -project LayoutKit.xcodeproj \
@@ -46,13 +55,15 @@ time xcodebuild clean test \
     | xcpretty &&
 cat build.log | sh debug-time-function-bodies.sh &&
 
-echo "Run building sample app..." &&
+echo "Building sample app..." &&
 rm -rf $DERIVED_DATA &&
 time xcodebuild clean build \
     -project LayoutKit.xcodeproj \
     -scheme LayoutKitSampleApp \
     -sdk iphonesimulator10.3 \
     -derivedDataPath $DERIVED_DATA \
+    -destination 'platform=iOS Simulator,name=iPhone 6,OS=9.3' \
+    -destination 'platform=iOS Simulator,name=iPhone 6 Plus,OS=9.3' \
     -destination 'platform=iOS Simulator,name=iPhone 7,OS=10.3' \
     -destination 'platform=iOS Simulator,name=iPhone 7 Plus,OS=10.3' \
     OTHER_SWIFT_FLAGS='-Xfrontend -debug-time-function-bodies' \
@@ -62,7 +73,7 @@ cat build.log | sh debug-time-function-bodies.sh &&
 
 # Test Cocopods, Carthage, Swift Package Management
 
-echo "Run building an iOS empty project with cocoapods..." &&
+echo "Building an iOS empty project with cocoapods..." &&
 rm -rf $DERIVED_DATA &&
 cd Tests/cocoapods/ios &&
 pod install &&
@@ -78,7 +89,7 @@ time xcodebuild clean build \
 cd ../../.. &&
 cat build.log | sh debug-time-function-bodies.sh &&
 
-echo "Run building a macOS empty project with cocoapods..." &&
+echo "Building a macOS empty project with cocoapods..." &&
 rm -rf $DERIVED_DATA &&
 cd Tests/cocoapods/macos &&
 pod install &&
@@ -93,7 +104,7 @@ time xcodebuild clean build \
 cd ../../.. &&
 cat build.log | sh debug-time-function-bodies.sh &&
 
-echo "Run building a tvOS empty project with cocoapods..." &&
+echo "Building a tvOS empty project with cocoapods..." &&
 rm -rf $DERIVED_DATA &&
 cd Tests/cocoapods/tvos &&
 pod install &&
