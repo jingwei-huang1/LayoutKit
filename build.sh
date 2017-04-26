@@ -11,10 +11,10 @@ echo "Derived data location: $DERIVED_DATA";
 set -o pipefail &&
 echo "Install 9.3 simulators" &&
 xcrun simctl create 'iPhone 6' \
-    com.apple.CoreSimulator.SimDeviceType.iPhone-5 \
+    com.apple.CoreSimulator.SimDeviceType.iPhone-6 \
     com.apple.CoreSimulator.SimRuntime.iOS-9-3 &&
 xcrun simctl create 'iPhone 6 Plus' \
-    com.apple.CoreSimulator.SimDeviceType.iPhone-5 \
+    com.apple.CoreSimulator.SimDeviceType.iPhone-6-Plus \
     com.apple.CoreSimulator.SimRuntime.iOS-9-3 &&
 
 echo "Run test on iOS..." &&
