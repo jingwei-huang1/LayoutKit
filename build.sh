@@ -9,6 +9,13 @@ echo "Derived data location: $DERIVED_DATA";
     #-destination 'platform=iOS Simulator,name=iPhone 6 Plus,OS=8.4' \
 
 set -o pipefail &&
+echo "Install 9.3 simulators" &&
+xcrun simctl create 'iPhone 6' \
+    com.apple.CoreSimulator.SimDeviceType.iPhone-5 \
+    com.apple.CoreSimulator.SimRuntime.iOS-9-3 &&
+xcrun simctl create 'iPhone 6 Plus' \
+    com.apple.CoreSimulator.SimDeviceType.iPhone-5 \
+    com.apple.CoreSimulator.SimRuntime.iOS-9-3 &&
 
 echo "Run test on iOS..." &&
 rm -rf $DERIVED_DATA &&
